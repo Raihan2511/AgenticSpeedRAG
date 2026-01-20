@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  # 🚀 The "Right Brain" (Visual/Semantic)
+  # Qdrant: Optimized for High-Speed Vector Search (RAM Resident)
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: speedrag_qdrant
+    ports:
+      - "6333:6333" # REST API
+      - "6334:6334" # gRPC (Faster for Python client)
+    volumes:
+      - ./qdrant_data:/qdrant/storage
+    deploy:
+      resources:
+        limits:
+          memory: 4G # Explicit limit to force efficient RAM usage
+
+  # 🐘 The "Left Brain" (Logical/Factual)
+  # Postgres: Optimized for Exact Keyword Search & Metadata (Disk Resident)
+  postgres:
+    image: postgres:15-alpine
+    container_name: speedrag_postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: rootpassword
+      POSTGRES_DB: speedrag_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
+    # ⚡ Speed Hack: We turn off synchronous commit for ingestion speed
+    # (Safe for cache/read-heavy systems, risky for banking)
+    command: ["postgres", "-c", "synchronous_commit=off"]
+
+networks:
+  default:
+    name: speedrag_net
