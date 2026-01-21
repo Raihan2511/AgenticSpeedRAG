@@ -5,7 +5,7 @@ url = "http://localhost:8000/api/v1/search"
 
 # ✅ We updated the query here:
 payload = {
-    "query": "Good morning"
+    "query": "diagram with arrows and boxes"
 }
 
 try:
