@@ -1,1 +1,6 @@
 .env
+pg_data
+qdrant_data
+*.cpython-313.pyc
+*.npy
+*.pyc
