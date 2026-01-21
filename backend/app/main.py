@@ -2,8 +2,24 @@ from fastapi import FastAPI, HTTPException
 from backend.app.routers import search
 from backend.app.services.postgres_engine import PostgresEngine
 import uvicorn
+import os
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI(title="Agentic SpeedRAG", version="1.0")
+
+
+
+# ---------------------------------------------------------
+# 🔧 THE FIX: Mount the 'data/raw_images' folder to '/images'
+# This tells the server: "When someone asks for /images/x.png, 
+# look inside data/raw_images/x.png"
+# ---------------------------------------------------------
+# Ensure the directory exists to avoid errors on startup
+if not os.path.exists("data/raw_images"):
+    os.makedirs("data/raw_images")
+
+app.mount("/images", StaticFiles(directory="data/raw_images"), name="images") 
+# ---------------------------------------------------------
 
 # Initialize the Engine globally so we can check it
 pg_engine = PostgresEngine()

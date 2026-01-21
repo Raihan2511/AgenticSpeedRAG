@@ -101,7 +101,7 @@ class SemanticRouter:
         # (SigLIP embeddings are normalized, so 0.45 is a solid similarity score)
         best_score = np.max(scores)
         
-        if best_score > 0.45:
+        if best_score > 0.82:
             print(f"🛑 Router blocked search (Score: {best_score:.2f})")
             return "chitchat"
         else:
